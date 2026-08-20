@@ -129,6 +129,17 @@
       -webkit-user-select: text;
     }
 
+    .ios-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='%238e8e93' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
     .ios-box:focus {
       border-color: var(--accent-blue);
       box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.1);
@@ -182,11 +193,37 @@
       margin-top: 8px;
     }
 
+    .action-container-dual {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 8px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-skip {
+      background: #e5e5ea;
+      color: var(--accent-blue);
+      border: none;
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-skip:active {
+      background: #d1d1d6;
+    }
+
     .btn-proceed {
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
       width: 100%;
+      flex: 2;
       padding: 11px 16px;
       border-radius: 12px;
       font-size: 15px;
@@ -342,7 +379,6 @@
       border-top: 0.5px solid var(--divider-color);
     }
 
-    /* Account Saved Button: Blue Background */
     .action-btn-confirm {
       background: var(--accent-blue);
       color: #ffffff;
@@ -360,7 +396,6 @@
       box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
     }
 
-    /* Rounded Green Background for Checkmark Icon inside the button */
     .check-icon-circle {
       width: 20px;
       height: 20px;
@@ -522,10 +557,10 @@
     </div>
   </div>
 
-  <!-- Step 4: 2FA Secret Key -->
+  <!-- Step 4: 2FA Secret Key & Gmail Status -->
   <div id="step-4" class="step-container">
     <div class="info-box-group">
-      <label class="box-label">Your 2FA Secret Key</label>
+      <label class="box-label">Your 2FA Secret Key (Optional)</label>
       <div class="input-wrapper">
         <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validate2FAField()">
         <div class="input-indicator" id="2fa-indicator">
@@ -533,7 +568,21 @@
         </div>
       </div>
     </div>
-    <div class="action-container">
+
+    <!-- Gmail Status Dropdown -->
+    <div class="info-box-group">
+      <label class="box-label">Gmail Status</label>
+      <div class="input-wrapper">
+        <select id="select-status" class="ios-box ios-select">
+          <option value="Security Processing" selected>Security Processing</option>
+          <option value="Rent Processing">Rent Processing</option>
+          <option value="Sell Processing">Sell Processing</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="action-container-dual">
+      <button class="btn-skip" type="button" onclick="skipStep4()">Skip</button>
       <button class="btn-proceed" id="btn-4" disabled onclick="nextStep(4)">
         <span id="btn-text-4">Proceed</span>
         <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
@@ -574,7 +623,7 @@
     }
 
     let currentStep = 1;
-    let formData = { email: "", password: "", recovery: "", twofa: "" };
+    let formData = { email: "", password: "", recovery: "", twofa: "", status: "Security Processing" };
     let active2FASlots = [];
 
     function updateNavHeader() {
@@ -615,7 +664,6 @@
       const btn = document.getElementById(`btn-${stepNum}`);
       const val = input.value.trim().toLowerCase();
 
-      // Updated to support both @gmail.com and @hotmail.com
       if ((val.endsWith("@gmail.com") || val.endsWith("@hotmail.com")) && val.length > 10) {
         if (fieldName === 'email' || fieldName === 'recovery') {
           if (fieldName === 'email' && existingSavedEmails.includes(val)) {
@@ -693,12 +741,19 @@
       }
     }
 
+    function skipStep4() {
+      formData.twofa = "";
+      formData.status = document.getElementById('select-status').value;
+      buildConfirmationCard();
+    }
+
     function nextStep(step) {
       if (step === 1) formData.email = document.getElementById('input-email').value.trim();
       if (step === 2) formData.password = document.getElementById('input-password').value.trim();
       if (step === 3) formData.recovery = document.getElementById('input-recovery').value.trim();
       if (step === 4) {
         formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
+        formData.status = document.getElementById('select-status').value;
         
         const btnText = document.getElementById(`btn-text-${step}`);
         const spinner = document.getElementById(`spinner-${step}`);
@@ -820,8 +875,20 @@
       const container = document.getElementById('confirmation-card-content');
       active2FASlots = [];
 
+      let twoFaSecretHTML = '';
       let totpLiveHTML = '';
+
       if (formData.twofa) {
+        twoFaSecretHTML = `
+          <div class="field-item">
+            <span class="field-left">2FA Secret Key</span>
+            <div class="field-right-group">
+              <span class="field-right">${escapeHtml(formData.twofa)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.twofa)}', this)">${copyIconSVG}</button>
+            </div>
+          </div>
+        `;
+
         totpLiveHTML = `
           <div class="field-item">
             <span class="field-left label-blue">2FA Verification Code</span>
@@ -865,11 +932,13 @@
           </div>
         </div>
 
+        ${twoFaSecretHTML}
+
         <div class="field-item">
-          <span class="field-left">2FA Secret Key</span>
+          <span class="field-left">Status</span>
           <div class="field-right-group">
-            <span class="field-right">${escapeHtml(formData.twofa)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.twofa)}', this)">${copyIconSVG}</button>
+            <span class="field-right">${escapeHtml(formData.status)}</span>
+            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.status)}', this)">${copyIconSVG}</button>
           </div>
         </div>
 
@@ -886,7 +955,6 @@
         setTimeout(() => {
           active2FASlots.push({
             secret: formData.twofa,
-            value_el: document.getElementById('conf-totp-val'),
             valueEl: document.getElementById('conf-totp-val'),
             timerEl: document.getElementById('conf-timer'),
             ringProgressEl: document.getElementById('conf-ring'),
@@ -904,7 +972,8 @@
         email: formData.email,
         password: formData.password,
         recovery: formData.recovery,
-        tfa: formData.twofa
+        tfa: formData.twofa,
+        status: formData.status
       };
 
       const jsonString = JSON.stringify(payload);
