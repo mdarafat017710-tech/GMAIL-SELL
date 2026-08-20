@@ -11,9 +11,9 @@
       --card-bg: #ffffff;
       --search-bg: #e3e3e8;
       --accent-blue: #007aff;
-      --accent-green: #34c759;
-      --accent-red: #ff3b30;
-      --accent-yellow: #d97706; /* Readable Yellow/Amber for white background */
+      --accent-green: #34c759; /* Pure Bright Green */
+      --accent-red: #ff3b30;   /* Pure Red */
+      --accent-yellow: #f59e0b;/* Pure Vivid Yellow/Amber */
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #e5e5ea;
@@ -29,8 +29,6 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
     }
 
     body {
@@ -320,7 +318,7 @@
       color: #ffffff !important;
     }
 
-    /* Strict Text-Only Status Colors (No Backgrounds) */
+    /* Pure Text Status Colors - Absolutely No Background */
     .status-badge {
       display: inline-block;
       font-size: 12px;
@@ -331,7 +329,7 @@
     }
     .status-security { color: var(--accent-red) !important; }
     .status-rent { color: var(--accent-yellow) !important; }
-    .status-sell { color: var(--accent-red) !important; }
+    .status-sell { color: var(--accent-green) !important; }
     .status-default { color: var(--text-muted) !important; }
 
     .card-actions {
@@ -469,39 +467,79 @@
       -webkit-user-select: text;
     }
 
-    /* Custom iOS Select Dropdown Styling */
-    .modal-select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-color: #ffffff;
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px top 50%;
-      background-size: 11px auto;
-      padding-right: 32px;
-      cursor: pointer;
-      font-weight: 700;
+    /* CUSTOM iOS STYLE DROPDOWN */
+    .custom-dropdown-container {
+      position: relative;
+      width: 100%;
     }
 
-    .modal-select option {
-      font-weight: 700;
+    .custom-dropdown-trigger {
+      width: 100%;
+      padding: 9px 34px 9px 10px;
       background: #ffffff;
+      border: 1.5px solid var(--accent-blue);
+      box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.25s ease;
     }
 
-    .modal-input.blue-glow {
-      border-color: var(--accent-blue) !important;
-      box-shadow: 0 0 8px rgba(0, 122, 255, 0.35) !important;
+    .custom-dropdown-trigger .selected-text {
+      font-weight: 700;
     }
 
-    .modal-input.valid-glow {
-      border-color: var(--accent-green) !important;
-      box-shadow: 0 0 8px rgba(52, 199, 89, 0.45) !important;
+    .custom-dropdown-arrow {
+      color: var(--accent-blue);
+      transition: transform 0.2s ease;
     }
 
-    .modal-input.invalid-glow {
-      border-color: var(--accent-red) !important;
-      box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
+    .custom-dropdown-container.open .custom-dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      z-index: 10001;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .custom-dropdown-container.open .custom-dropdown-menu {
+      display: flex;
+    }
+
+    .custom-dropdown-item {
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 0.5px solid var(--divider-color);
+      transition: background 0.15s ease;
+    }
+
+    .custom-dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .custom-dropdown-item:active {
+      background: #e5e5ea;
     }
 
     .valid-check-badge {
@@ -682,15 +720,25 @@
         </div>
       </div>
 
-      <!-- 4th Field: Gmail Status Dropdown -->
+      <!-- 4th Field: Custom iOS Gmail Status Dropdown -->
       <div class="modal-input-group">
         <label class="modal-label">Gmail Status</label>
-        <div class="input-wrapper">
-          <select id="edit-status-select" class="modal-input blue-glow modal-select" onchange="updateSelectColor()">
-            <option value="Security Processing" style="color: #ff3b30;">Security Processing</option>
-            <option value="Rent Processing" style="color: #d97706;">Rent Processing</option>
-            <option value="Sell Processing" style="color: #ff3b30;">Sell Processing</option>
-          </select>
+        <div class="custom-dropdown-container" id="custom-status-dropdown">
+          <div class="custom-dropdown-trigger" onclick="toggleStatusDropdown(event)">
+            <span id="selected-status-text" class="selected-text status-security">Security Processing</span>
+            <svg class="custom-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="custom-dropdown-menu">
+            <div class="custom-dropdown-item status-security" onclick="selectStatusOption('Security Processing')">
+              <span>Security Processing</span>
+            </div>
+            <div class="custom-dropdown-item status-rent" onclick="selectStatusOption('Rent Processing')">
+              <span>Rent Processing</span>
+            </div>
+            <div class="custom-dropdown-item status-sell" onclick="selectStatusOption('Sell Processing')">
+              <span>Sell Processing</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -723,6 +771,7 @@
     const deleteIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
 
     let activeTargetEmail = "";
+    let selectedStatusValue = "Security Processing";
     let toastTimer;
 
     function showToast() {
@@ -827,16 +876,28 @@
       return 'status-default';
     }
 
-    /* Dynamically Update Dropdown Text Color in Modal */
-    function updateSelectColor() {
-      const select = document.getElementById('edit-status-select');
-      const val = select.value.toLowerCase();
-      if (val.includes('rent')) {
-        select.style.color = 'var(--accent-yellow)';
-      } else {
-        select.style.color = 'var(--accent-red)';
-      }
+    /* Custom Dropdown Control Functions */
+    function toggleStatusDropdown(event) {
+      event.stopPropagation();
+      const container = document.getElementById('custom-status-dropdown');
+      container.classList.toggle('open');
     }
+
+    function selectStatusOption(val) {
+      selectedStatusValue = val;
+      const textEl = document.getElementById('selected-status-text');
+      textEl.innerText = val;
+      textEl.className = 'selected-text ' + getStatusBadgeClass(val);
+      document.getElementById('custom-status-dropdown').classList.remove('open');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      const container = document.getElementById('custom-status-dropdown');
+      if (container && !container.contains(e.target)) {
+        container.classList.remove('open');
+      }
+    });
 
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
@@ -952,7 +1013,7 @@
           ${tfaSecretHTML}
           ${totpBoxHTML}
 
-          <!-- Pure Text Status Color -->
+          <!-- Status Field with Pure Text Color -->
           <div class="field-item">
             <span class="field-left">Status</span>
             <div class="field-right-group">
@@ -1072,18 +1133,14 @@
       const recoveryInput = document.getElementById('edit-recovery-input');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
-      const statusSelect = document.getElementById('edit-status-select');
 
       newPassInput.value = currentPass;
       recoveryInput.value = (currentRecovery && currentRecovery !== "N/A") ? currentRecovery : "";
       tfaInput.value = (current2FA && current2FA !== "N/A") ? current2FA.toUpperCase() : "";
       passInput.value = '';
 
-      if (currentStatus) {
-        statusSelect.value = currentStatus;
-      }
+      selectStatusOption(currentStatus || 'Security Processing');
 
-      updateSelectColor();
       validateEditForm();
       modal.classList.add('active');
     }
@@ -1184,7 +1241,6 @@
       const newPassVal = document.getElementById('edit-new-pass').value.trim();
       const recoveryVal = document.getElementById('edit-recovery-input').value.trim();
       const tfaVal = document.getElementById('edit-2fa-input').value.trim();
-      const statusVal = document.getElementById('edit-status-select').value;
 
       const payload = {
         action: "edit_account",
@@ -1193,7 +1249,7 @@
         recovery: recoveryVal,
         secretKey: tfaVal,
         tfa: tfaVal,
-        status: statusVal
+        status: selectedStatusValue
       };
 
       sendDataToTelegram(payload);
