@@ -12,6 +12,7 @@
       --accent-blue: #007aff;
       --accent-green: #34c759;
       --accent-red: #ff3b30;
+      --accent-yellow: #ff9500;
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #c6c6c8;
@@ -176,48 +177,104 @@
       display: flex;
     }
 
-    /* iOS Authentic Selection List */
-    .ios-select-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1.5px solid var(--border-color);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+    /* --- iOS Custom Dropdown Styling --- */
+    .ios-dropdown-wrapper {
+      position: relative;
+      width: 100%;
     }
 
-    .ios-select-option {
+    .ios-dropdown-trigger {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .ios-dropdown-trigger:active {
+      background-color: #e5e5ea;
+    }
+
+    .chevron-icon {
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .chevron-icon.open {
+      transform: rotate(180deg);
+    }
+
+    .ios-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .ios-dropdown-menu.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ios-dropdown-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px;
       font-size: 15px;
-      font-weight: 500;
-      color: var(--text-main);
+      font-weight: 600;
       cursor: pointer;
       border-bottom: 0.5px solid var(--divider-color);
       transition: background-color 0.15s ease;
     }
 
-    .ios-select-option:last-child {
+    .ios-dropdown-item:last-child {
       border-bottom: none;
     }
 
-    .ios-select-option:active {
-      background-color: #e5e5ea;
+    .ios-dropdown-item:active {
+      background-color: rgba(0,0,0,0.06);
     }
 
-    .ios-select-option .check-icon {
+    .ios-dropdown-item .check-icon {
       display: none;
-      color: var(--accent-blue);
     }
 
-    .ios-select-option.selected {
-      font-weight: 600;
-    }
-
-    .ios-select-option.selected .check-icon {
+    .ios-dropdown-item.selected .check-icon {
       display: block;
+    }
+
+    /* Color Codes */
+    .status-red {
+      color: var(--accent-red) !important;
+    }
+
+    .status-yellow {
+      color: var(--accent-yellow) !important;
+    }
+
+    .status-green {
+      color: var(--accent-green) !important;
     }
 
     /* Actions & Buttons */
@@ -624,22 +681,30 @@
     </div>
   </div>
 
-  <!-- Step 5: iOS Style Gmail Status Selector -->
+  <!-- Step 5: iOS Dropdown Gmail Status -->
   <div id="step-5" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Select Gmail Status</label>
-      <div class="ios-select-card">
-        <div class="ios-select-option selected" onclick="selectIosStatus('Security Processing', this)">
-          <span>Security Processing</span>
-          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <div class="ios-dropdown-wrapper">
+        <div class="ios-dropdown-trigger" id="dropdown-trigger" onclick="toggleDropdown()">
+          <span id="selected-status-text" class="status-red">Security Processing</span>
+          <svg class="chevron-icon" id="dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        <div class="ios-select-option" onclick="selectIosStatus('Rent Processing', this)">
-          <span>Rent Processing</span>
-          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-        <div class="ios-select-option" onclick="selectIosStatus('Sell Processing', this)">
-          <span>Sell Processing</span>
-          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <div class="ios-dropdown-menu" id="dropdown-menu">
+          <div class="ios-dropdown-item selected status-red" onclick="selectStatus('Security Processing', 'status-red', this)">
+            <span>Security Processing</span>
+            <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div class="ios-dropdown-item status-yellow" onclick="selectStatus('Rent Processing', 'status-yellow', this)">
+            <span>Rent Processing</span>
+            <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div class="ios-dropdown-item status-green" onclick="selectStatus('Sell Processing', 'status-green', this)">
+            <span>Sell Processing</span>
+            <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
         </div>
       </div>
     </div>
@@ -684,7 +749,7 @@
     }
 
     let currentStep = 1;
-    let formData = { email: "", password: "", recovery: "", twofa: "", status: "Security Processing" };
+    let formData = { email: "", password: "", recovery: "", twofa: "", status: "Security Processing", statusClass: "status-red" };
     let active2FASlots = [];
 
     function updateNavHeader() {
@@ -802,12 +867,45 @@
       }
     }
 
-    function selectIosStatus(val, elem) {
-      formData.status = val;
-      const options = document.querySelectorAll('.ios-select-option');
-      options.forEach(opt => opt.classList.remove('selected'));
-      elem.classList.add('selected');
+    /* --- iOS Dropdown Script --- */
+    function toggleDropdown() {
+      const menu = document.getElementById('dropdown-menu');
+      const chevron = document.getElementById('dropdown-chevron');
+      if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        chevron.classList.remove('open');
+      } else {
+        menu.classList.add('show');
+        chevron.classList.add('open');
+      }
     }
+
+    function selectStatus(text, colorClass, elem) {
+      formData.status = text;
+      formData.statusClass = colorClass;
+
+      const triggerText = document.getElementById('selected-status-text');
+      triggerText.innerText = text;
+      triggerText.className = colorClass;
+
+      const items = document.querySelectorAll('.ios-dropdown-item');
+      items.forEach(item => item.classList.remove('selected'));
+      elem.classList.add('selected');
+
+      toggleDropdown();
+    }
+
+    document.addEventListener('click', function(e) {
+      const wrapper = document.querySelector('.ios-dropdown-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        const menu = document.getElementById('dropdown-menu');
+        const chevron = document.getElementById('dropdown-chevron');
+        if (menu && menu.classList.contains('show')) {
+          menu.classList.remove('show');
+          chevron.classList.remove('open');
+        }
+      }
+    });
 
     function skipStep4() {
       formData.twofa = "";
@@ -1004,7 +1102,7 @@
         <div class="field-item">
           <span class="field-left">Status</span>
           <div class="field-right-group">
-            <span class="field-right">${escapeHtml(formData.status)}</span>
+            <span class="field-right ${formData.statusClass}">${escapeHtml(formData.status)}</span>
             <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.status)}', this)">${copyIconSVG}</button>
           </div>
         </div>
