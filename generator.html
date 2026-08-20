@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Account Generator - iOS Style</title>
+  <style>
+    :root {
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --accent-blue: #007aff;
+      --accent-green: #34c759;
+      --text-main: #000000;
+      --text-muted: #8e8e93;
+      --border-color: #c6c6c8;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      top: 14px;
+      opacity: 1;
+    }
+
+    #toast .toast-icon {
+      background: var(--accent-green);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Top Nav / Title */
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    /* Main Container Card */
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Box Item Style */
+    .info-box-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .box-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      padding-left: 4px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Compact Input/Box with Green Glow */
+    .ios-box {
+      width: 100%;
+      padding: 10px 44px 10px 12px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--accent-green);
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-family: monospace, var(--font-family);
+      color: var(--text-main);
+      outline: none;
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.15);
+      transition: all 0.3s ease;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .ios-box:focus {
+      box-shadow: 0 0 14px rgba(52, 199, 89, 0.4), 0 2px 8px rgba(52, 199, 89, 0.2);
+    }
+
+    /* Copy Button inside Box (Right Side) */
+    .box-copy-btn {
+      position: absolute;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      background: #f0f0f5;
+      color: var(--accent-blue);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .box-copy-btn.copied {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
+    }
+
+    /* Single Random Button Area */
+    .action-container {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 12px;
+      display: flex;
+    }
+
+    .btn-random {
+      width: 100%;
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-random:active {
+      opacity: 0.8;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* iOS Spinner Animation */
+    .ios-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      animation: iosRotate 0.8s steps(8, end) infinite;
+    }
+
+    @keyframes iosRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body onload="generateAccount()">
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <div class="toast-icon">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <span>Copied Successfully!</span>
+  </div>
+
+  <h1 class="header-title">Generated Account</h1>
+
+  <div class="container">
+    
+    <!-- Username Box -->
+    <div class="info-box-group">
+      <label class="box-label">Username</label>
+      <div class="input-wrapper">
+        <input type="text" id="username-box" class="ios-box" readonly>
+        <button class="box-copy-btn" onclick="copyValue('username-box', this)" title="Copy">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Email Box -->
+    <div class="info-box-group">
+      <label class="box-label">Email Address</label>
+      <div class="input-wrapper">
+        <input type="text" id="email-box" class="ios-box" readonly>
+        <button class="box-copy-btn" onclick="copyValue('email-box', this)" title="Copy">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Password Box -->
+    <div class="info-box-group">
+      <label class="box-label">Password</label>
+      <div class="input-wrapper">
+        <input type="text" id="password-box" class="ios-box" readonly>
+        <button class="box-copy-btn" onclick="copyValue('password-box', this)" title="Copy">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recovery Email Box -->
+    <div class="info-box-group">
+      <label class="box-label">Recovery Email</label>
+      <div class="input-wrapper">
+        <input type="text" id="recovery-email-box" class="ios-box" readonly>
+        <button class="box-copy-btn" onclick="copyValue('recovery-email-box', this)" title="Copy">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Random/Change Action Button -->
+  <div class="action-container">
+    <button class="btn-random" id="random-btn" onclick="refreshData()">
+      <div class="btn-content" id="btn-inner">
+        <!-- Crisp High-Quality iOS Change/Refresh SVG Icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 4v6h-6"></path>
+          <path d="M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <span>Change</span>
+      </div>
+      <svg class="ios-spinner" viewBox="0 0 24 24">
+        <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+        <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+        <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+        <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+        <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+        <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+        <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const copiedCheckSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    let toastTimer;
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
+
+    function copyValue(elementId, btnElement) {
+      const val = document.getElementById(elementId).value;
+      if (!val) return;
+      navigator.clipboard.writeText(val).then(() => {
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = copiedCheckSVG;
+        showToast();
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = copyIconSVG;
+        }, 2000);
+      });
+    }
+
+    function generateAccount() {
+      let chars = "abcdefghijklmnopqrstuvwxyz";
+      let nums = "0123456789";
+
+      // 1. Username & Email generation
+      let uLength = Math.floor(Math.random() * 3) + 8;
+      let nLength = Math.floor(Math.random() * 3) + 2;
+      let username = "";
+
+      let randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
+      username += randomChar;
+
+      for (let i = 0; i < uLength - 1; i++) {
+        username += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      for (let j = 0; j < nLength; j++) {
+        username += nums.charAt(Math.floor(Math.random() * nums.length));
+      }
+
+      let email = username + "@gmail.com";
+
+      // 2. Password generation (Length strictly between 10 to 12 chars)
+      let passStartUpper = randomChar.toUpperCase();
+      let password = passStartUpper;
+
+      let blocksCount = Math.random() < 0.5 ? 2 : 3; 
+      
+      for (let b = 0; b < blocksCount; b++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += nums.charAt(Math.floor(Math.random() * nums.length));
+      }
+
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+
+      if (password.length < 10) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      } else if (password.length > 12) {
+        password = password.substring(0, 12);
+      }
+
+      // 3. Recovery Email generation (10-14 chars + 2-6 nums + @hotmail.com)
+      let rLetterLen = Math.floor(Math.random() * 5) + 10;
+      let rNumLen = Math.floor(Math.random() * 5) + 2;
+      let rLetterPart = "";
+      let rNumPart = "";
+
+      for (let k = 0; k < rLetterLen; k++) {
+        rLetterPart += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      for (let l = 0; l < rNumLen; l++) {
+        rNumPart += nums.charAt(Math.floor(Math.random() * nums.length));
+      }
+      let recoveryEmail = rLetterPart + rNumPart + "@hotmail.com";
+
+      document.getElementById('username-box').value = username;
+      document.getElementById('email-box').value = email;
+      document.getElementById('password-box').value = password;
+      document.getElementById('recovery-email-box').value = recoveryEmail;
+    }
+
+    function refreshData() {
+      const btn = document.getElementById('random-btn');
+      const innerContent = document.getElementById('btn-inner');
+      const spinner = btn.querySelector('.ios-spinner');
+
+      innerContent.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        generateAccount();
+        spinner.style.display = 'none';
+        innerContent.style.display = 'flex';
+        btn.disabled = false;
+      }, 350);
+    }
+  </script>
+</body>
+</html>
