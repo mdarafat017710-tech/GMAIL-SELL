@@ -10,7 +10,7 @@
       --bg-color: #f2f2f7;
       --card-bg: #ffffff;
       --search-bg: #e3e3e8;
-      --accent-blue: #007aff;
+      --accent-blue: #007aff;  /* Pure iOS Blue */
       --accent-green: #34c759; /* Pure Bright Green */
       --accent-red: #ff3b30;   /* Pure Red */
       --accent-yellow: #f59e0b;/* Pure Vivid Yellow/Amber */
@@ -98,7 +98,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .search-box {
@@ -165,68 +165,67 @@
       height: 33px;
     }
 
-    /* PREMIUM iOS STATUS CATEGORY BOXES */
+    /* 4 SLEEK SINGLE LINE iOS BUTTONS */
     .status-categories {
       width: 100%;
       max-width: 440px;
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 14px;
+      white-space: nowrap;
     }
 
     .category-card {
       flex: 1;
       background: var(--card-bg);
-      border: 1.5px solid var(--border-color);
-      border-radius: 14px;
-      padding: 10px 6px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 7px 4px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
       cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      position: relative;
+      transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
 
     .category-card:active {
-      transform: scale(0.94);
+      transform: scale(0.95);
       opacity: 0.85;
-    }
-
-    .category-card.active {
-      border-color: currentColor;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      background: #ffffff;
     }
 
     .category-card .cat-label {
       font-size: 11px;
       font-weight: 700;
       text-align: center;
-      line-height: 1.25;
-      word-break: break-word;
+      line-height: 1;
     }
 
-    .category-card .cat-count {
-      font-size: 12px;
-      font-weight: 800;
-      padding: 1px 7px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.05);
-      margin-top: 2px;
-    }
-
+    /* Color Classes */
+    .category-card.status-all { color: var(--accent-blue); }
     .category-card.status-security { color: var(--accent-red); }
     .category-card.status-rent { color: var(--accent-yellow); }
     .category-card.status-sell { color: var(--accent-green); }
 
-    .category-card.status-security.active { background: rgba(255, 59, 48, 0.06); }
-    .category-card.status-rent.active { background: rgba(245, 158, 11, 0.06); }
-    .category-card.status-sell.active { background: rgba(52, 199, 89, 0.06); }
+    /* Active Glass Highlights */
+    .category-card.status-all.active {
+      background: rgba(0, 122, 255, 0.1);
+      border-color: var(--accent-blue);
+    }
+    .category-card.status-security.active {
+      background: rgba(255, 59, 48, 0.1);
+      border-color: var(--accent-red);
+    }
+    .category-card.status-rent.active {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--accent-yellow);
+    }
+    .category-card.status-sell.active {
+      background: rgba(52, 199, 89, 0.1);
+      border-color: var(--accent-green);
+    }
 
     .ios-spinner {
       display: inline-block;
@@ -704,19 +703,19 @@
     </button>
   </div>
 
-  <!-- iOS Interactive Category Boxes -->
+  <!-- iOS Interactive 4 Category Buttons -->
   <div class="status-categories">
-    <div class="category-card status-security" onclick="handleCategoryFilter('Security Processing', this)">
-      <span class="cat-label">Security Processing</span>
-      <span class="cat-count" id="count-security">0</span>
+    <div class="category-card status-all active" onclick="handleCategoryFilter('All', this)">
+      <span class="cat-label">All</span>
     </div>
-    <div class="category-card status-rent" onclick="handleCategoryFilter('Rent Processing', this)">
-      <span class="cat-label">Rent Processing</span>
-      <span class="cat-count" id="count-rent">0</span>
+    <div class="category-card status-security" onclick="handleCategoryFilter('Security', this)">
+      <span class="cat-label">Security</span>
     </div>
-    <div class="category-card status-sell" onclick="handleCategoryFilter('Sell Processing', this)">
-      <span class="cat-label">Sell Processing</span>
-      <span class="cat-count" id="count-sell">0</span>
+    <div class="category-card status-rent" onclick="handleCategoryFilter('Rent', this)">
+      <span class="cat-label">Rent</span>
+    </div>
+    <div class="category-card status-sell" onclick="handleCategoryFilter('Sell', this)">
+      <span class="cat-label">Sell</span>
     </div>
   </div>
 
@@ -847,7 +846,7 @@
 
     let activeTargetEmail = "";
     let selectedStatusValue = "Security Processing";
-    let activeCategoryFilter = null;
+    let activeCategoryFilter = null; // null means 'All'
     let loadedAccountsData = [];
     let active2FASlots = [];
     let toastTimer;
@@ -950,34 +949,16 @@
       return 'status-default';
     }
 
-    /* Update Badge Counts inside Category Boxes */
-    function updateCategoryCounts() {
-      let secCount = 0;
-      let rentCount = 0;
-      let sellCount = 0;
-
-      loadedAccountsData.forEach(acc => {
-        const st = (acc.status || "Security Processing").toLowerCase();
-        if (st.includes('security')) secCount++;
-        else if (st.includes('rent')) rentCount++;
-        else if (st.includes('sell')) sellCount++;
-      });
-
-      document.getElementById('count-security').innerText = secCount;
-      document.getElementById('count-rent').innerText = rentCount;
-      document.getElementById('count-sell').innerText = sellCount;
-    }
-
-    /* iOS Interactive Category Box Click Handler */
+    /* Interactive 4 Category Box Click Handler */
     function handleCategoryFilter(status, element) {
       const allCards = document.querySelectorAll('.category-card');
+      allCards.forEach(c => c.classList.remove('active'));
 
-      if (activeCategoryFilter === status) {
+      if (status === 'All') {
         activeCategoryFilter = null;
-        allCards.forEach(c => c.classList.remove('active'));
+        element.classList.add('active');
       } else {
         activeCategoryFilter = status;
-        allCards.forEach(c => c.classList.remove('active'));
         element.classList.add('active');
       }
 
@@ -1000,17 +981,17 @@
 
       setTimeout(() => {
         applyFilters();
-      }, 300);
+      }, 250);
     }
 
     function applyFilters() {
       const query = document.getElementById('search-input').value.toLowerCase().trim();
       let filtered = loadedAccountsData;
 
-      if (activeCategoryFilter) {
+      if (activeCategoryFilter && activeCategoryFilter !== 'All') {
         filtered = filtered.filter(acc => {
           const statusVal = acc.status || "Security Processing";
-          return statusVal.toLowerCase() === activeCategoryFilter.toLowerCase();
+          return statusVal.toLowerCase().includes(activeCategoryFilter.toLowerCase());
         });
       }
 
@@ -1411,7 +1392,6 @@
       try {
         loadedAccountsData = JSON.parse(decodeURIComponent(rawData));
         if (!Array.isArray(loadedAccountsData)) loadedAccountsData = [];
-        updateCategoryCounts();
         renderAccounts(loadedAccountsData);
       } catch (e) {
         container.innerHTML = `<div class="empty-state">No accounts found!</div>`;
