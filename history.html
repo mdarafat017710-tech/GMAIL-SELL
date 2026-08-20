@@ -13,6 +13,7 @@
       --accent-blue: #007aff;
       --accent-green: #34c759;
       --accent-red: #ff3b30;
+      --accent-yellow: #d97706; /* Readable Yellow/Amber for white background */
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #e5e5ea;
@@ -319,7 +320,7 @@
       color: #ffffff !important;
     }
 
-    /* Text-Only Status Badge Styles (No Background) */
+    /* Strict Text-Only Status Colors (No Backgrounds) */
     .status-badge {
       display: inline-block;
       font-size: 12px;
@@ -328,10 +329,10 @@
       background: transparent !important;
       padding: 0;
     }
-    .status-security { color: var(--accent-red); }
-    .status-rent { color: var(--accent-blue); }
-    .status-self, .status-good { color: var(--accent-green); }
-    .status-default { color: var(--text-muted); }
+    .status-security { color: var(--accent-red) !important; }
+    .status-rent { color: var(--accent-yellow) !important; }
+    .status-sell { color: var(--accent-red) !important; }
+    .status-default { color: var(--text-muted) !important; }
 
     .card-actions {
       display: flex;
@@ -468,7 +469,7 @@
       -webkit-user-select: text;
     }
 
-    /* iOS Styled Select Dropdown */
+    /* Custom iOS Select Dropdown Styling */
     .modal-select {
       appearance: none;
       -webkit-appearance: none;
@@ -480,8 +481,12 @@
       background-size: 11px auto;
       padding-right: 32px;
       cursor: pointer;
-      font-weight: 600;
-      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .modal-select option {
+      font-weight: 700;
+      background: #ffffff;
     }
 
     .modal-input.blue-glow {
@@ -644,19 +649,7 @@
         <span>Edit Account</span>
       </div>
       
-      <!-- 1st Field: Gmail Status Dropdown (Moved Above Password) -->
-      <div class="modal-input-group">
-        <label class="modal-label">Gmail Status</label>
-        <div class="input-wrapper">
-          <select id="edit-status-select" class="modal-input blue-glow modal-select">
-            <option value="Security Processing">Security Processing</option>
-            <option value="Rent Processing">Rent Processing</option>
-            <option value="Self Processing">Self Processing</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- 2nd Field: Password -->
+      <!-- 1st Field: Password -->
       <div class="modal-input-group">
         <label class="modal-label">Your Password</label>
         <div class="input-wrapper">
@@ -667,7 +660,7 @@
         </div>
       </div>
 
-      <!-- 3rd Field: Recovery Email -->
+      <!-- 2nd Field: Recovery Email -->
       <div class="modal-input-group">
         <label class="modal-label">Your Recovery Email</label>
         <div class="input-wrapper">
@@ -678,7 +671,7 @@
         </div>
       </div>
 
-      <!-- 4th Field: 2FA Secret Key -->
+      <!-- 3rd Field: 2FA Secret Key -->
       <div class="modal-input-group">
         <label class="modal-label">2FA Secret Key</label>
         <div class="input-wrapper">
@@ -686,6 +679,18 @@
           <div class="valid-check-badge" id="edit-2fa-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
+        </div>
+      </div>
+
+      <!-- 4th Field: Gmail Status Dropdown -->
+      <div class="modal-input-group">
+        <label class="modal-label">Gmail Status</label>
+        <div class="input-wrapper">
+          <select id="edit-status-select" class="modal-input blue-glow modal-select" onchange="updateSelectColor()">
+            <option value="Security Processing" style="color: #ff3b30;">Security Processing</option>
+            <option value="Rent Processing" style="color: #d97706;">Rent Processing</option>
+            <option value="Sell Processing" style="color: #ff3b30;">Sell Processing</option>
+          </select>
         </div>
       </div>
 
@@ -812,13 +817,25 @@
       updateAllTOTPCodes();
     }, 1000);
 
+    /* Text Color Mapping for Statuses */
     function getStatusBadgeClass(status) {
       if (!status) return 'status-default';
       const s = status.toLowerCase();
       if (s.includes('security')) return 'status-security';
       if (s.includes('rent')) return 'status-rent';
-      if (s.includes('self') || s.includes('good')) return 'status-self';
+      if (s.includes('sell')) return 'status-sell';
       return 'status-default';
+    }
+
+    /* Dynamically Update Dropdown Text Color in Modal */
+    function updateSelectColor() {
+      const select = document.getElementById('edit-status-select');
+      const val = select.value.toLowerCase();
+      if (val.includes('rent')) {
+        select.style.color = 'var(--accent-yellow)';
+      } else {
+        select.style.color = 'var(--accent-red)';
+      }
     }
 
     function renderAccounts(accounts) {
@@ -935,7 +952,7 @@
           ${tfaSecretHTML}
           ${totpBoxHTML}
 
-          <!-- Status Position: Directly below 2FA Verification Code -->
+          <!-- Pure Text Status Color -->
           <div class="field-item">
             <span class="field-left">Status</span>
             <div class="field-right-group">
@@ -1066,6 +1083,7 @@
         statusSelect.value = currentStatus;
       }
 
+      updateSelectColor();
       validateEditForm();
       modal.classList.add('active');
     }
