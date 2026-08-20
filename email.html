@@ -619,70 +619,8 @@
     </div>
   </div>
 
-  <!-- Step 3: Recovery Email -->
+  <!-- Step 3: iOS Dropdown Gmail Status -->
   <div id="step-3" class="step-container">
-    <div class="info-box-group">
-      <label class="box-label">Your Recovery Email</label>
-      <div class="input-wrapper">
-        <input type="email" id="input-recovery" class="ios-box" placeholder="Enter recovery email" oninput="validateGmailField('recovery', 3)">
-        <div class="input-indicator" id="recovery-indicator">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-      </div>
-      <div class="field-error-msg" id="recovery-error-msg">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Email already submitted</span>
-      </div>
-    </div>
-    <div class="action-container">
-      <button class="btn-proceed" id="btn-3" disabled onclick="nextStep(3)">
-        <span id="btn-text-3">Proceed</span>
-        <svg class="ios-spinner" id="spinner-3" viewBox="0 0 24 24">
-          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- Step 4: 2FA Secret Key (Optional) -->
-  <div id="step-4" class="step-container">
-    <div class="info-box-group">
-      <label class="box-label">Your 2FA Secret Key (Optional)</label>
-      <div class="input-wrapper">
-        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validate2FAField()">
-        <div class="input-indicator" id="2fa-indicator">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="action-container-dual">
-      <button class="btn-skip" type="button" onclick="skipStep4()">Skip</button>
-      <button class="btn-proceed" id="btn-4" disabled onclick="nextStep(4)">
-        <span id="btn-text-4">Proceed</span>
-        <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
-          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- Step 5: iOS Dropdown Gmail Status -->
-  <div id="step-5" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Select Gmail Status</label>
       <div class="ios-dropdown-wrapper">
@@ -709,7 +647,70 @@
       </div>
     </div>
     <div class="action-container">
-      <button class="btn-proceed" id="btn-5" onclick="nextStep(5)">
+      <button class="btn-proceed" id="btn-3" onclick="nextStep(3)">
+        <span id="btn-text-3">Proceed</span>
+        <svg class="ios-spinner" id="spinner-3" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 4: Recovery Email -->
+  <div id="step-4" class="step-container">
+    <div class="info-box-group">
+      <label class="box-label">Your Recovery Email</label>
+      <div class="input-wrapper">
+        <input type="email" id="input-recovery" class="ios-box" placeholder="Enter recovery email" oninput="validateGmailField('recovery', 4)">
+        <div class="input-indicator" id="recovery-indicator">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+      <div class="field-error-msg" id="recovery-error-msg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Email already submitted</span>
+      </div>
+    </div>
+    <div class="action-container-dual">
+      <button class="btn-skip" id="skip-btn-recovery" type="button" onclick="skipRecovery()">Skip</button>
+      <button class="btn-proceed" id="btn-4" disabled onclick="nextStep(4)">
+        <span id="btn-text-4">Proceed</span>
+        <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 5: 2FA Secret Key (Optional) -->
+  <div id="step-5" class="step-container">
+    <div class="info-box-group">
+      <label class="box-label">Your 2FA Secret Key (Optional)</label>
+      <div class="input-wrapper">
+        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validate2FAField()">
+        <div class="input-indicator" id="2fa-indicator">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-container-dual">
+      <button class="btn-skip" id="skip-btn-2fa" type="button" onclick="skip2FA()">Skip</button>
+      <button class="btn-proceed" id="btn-5" disabled onclick="nextStep(5)">
         <span id="btn-text-5">Proceed</span>
         <svg class="ios-spinner" id="spinner-5" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
@@ -749,7 +750,7 @@
     }
 
     let currentStep = 1;
-    let formData = { email: "", password: "", recovery: "", twofa: "", status: "Security Processing", statusClass: "status-red" };
+    let formData = { email: "", password: "", status: "Security Processing", statusClass: "status-red", recovery: "", twofa: "" };
     let active2FASlots = [];
 
     function updateNavHeader() {
@@ -845,7 +846,7 @@
     function validate2FAField() {
       const input = document.getElementById('input-2fa');
       const indicator = document.getElementById('2fa-indicator');
-      const btn = document.getElementById('btn-4');
+      const btn = document.getElementById('btn-5');
       const val = input.value.trim().toUpperCase();
       const cleanVal = val.replace(/[\s]/g, '');
       const base32Regex = /^[A-Z2-7]+$/;
@@ -907,14 +908,33 @@
       }
     });
 
-    function skipStep4() {
-      formData.twofa = "";
+    function skipRecovery() {
+      formData.recovery = "";
       goToStep(5);
+    }
+
+    function skip2FA() {
+      formData.twofa = "";
+      buildConfirmationCard();
     }
 
     function goToStep(targetStep) {
       document.getElementById(`step-${currentStep}`).classList.remove('active');
       currentStep = targetStep;
+
+      // Status Processing অনুযায়ী Skip বাটন হাইড বা শো করা
+      const isSecurity = (formData.status === "Security Processing");
+
+      const skipRecoveryBtn = document.getElementById('skip-btn-recovery');
+      if (skipRecoveryBtn) {
+        skipRecoveryBtn.style.display = isSecurity ? 'flex' : 'none';
+      }
+
+      const skip2faBtn = document.getElementById('skip-btn-2fa');
+      if (skip2faBtn) {
+        skip2faBtn.style.display = isSecurity ? 'flex' : 'none';
+      }
+
       document.getElementById(`step-${currentStep}`).classList.add('active');
       updateNavHeader();
     }
@@ -922,8 +942,11 @@
     function nextStep(step) {
       if (step === 1) formData.email = document.getElementById('input-email').value.trim();
       if (step === 2) formData.password = document.getElementById('input-password').value.trim();
-      if (step === 3) formData.recovery = document.getElementById('input-recovery').value.trim();
-      if (step === 4) formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
+      if (step === 3) {
+        // Status handled by dropdown
+      }
+      if (step === 4) formData.recovery = document.getElementById('input-recovery').value.trim();
+      if (step === 5) formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
 
       if (step === 5) {
         const btnText = document.getElementById(`btn-text-${step}`);
@@ -1040,6 +1063,28 @@
       const container = document.getElementById('confirmation-card-content');
       active2FASlots = [];
 
+      let recoveryHTML = '';
+      if (formData.recovery) {
+        recoveryHTML = `
+          <div class="field-item">
+            <span class="field-left">Recovery Email</span>
+            <div class="field-right-group">
+              <span class="field-right">${escapeHtml(formData.recovery)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.recovery)}', this)">${copyIconSVG}</button>
+            </div>
+          </div>
+        `;
+      } else {
+        recoveryHTML = `
+          <div class="field-item">
+            <span class="field-left">Recovery Email</span>
+            <div class="field-right-group">
+              <span class="field-right" style="color: var(--text-muted);">Skipped</span>
+            </div>
+          </div>
+        `;
+      }
+
       let twoFaSecretHTML = '';
       let totpLiveHTML = '';
 
@@ -1090,22 +1135,16 @@
         </div>
 
         <div class="field-item">
-          <span class="field-left">Recovery Email</span>
-          <div class="field-right-group">
-            <span class="field-right">${escapeHtml(formData.recovery)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.recovery)}', this)">${copyIconSVG}</button>
-          </div>
-        </div>
-
-        ${twoFaSecretHTML}
-
-        <div class="field-item">
           <span class="field-left">Status</span>
           <div class="field-right-group">
             <span class="field-right ${formData.statusClass}">${escapeHtml(formData.status)}</span>
             <button class="copy-btn" onclick="copyToClipboard('${escapeJs(formData.status)}', this)">${copyIconSVG}</button>
           </div>
         </div>
+
+        ${recoveryHTML}
+
+        ${twoFaSecretHTML}
 
         ${totpLiveHTML}
 
@@ -1136,9 +1175,9 @@
         action: "submit_account",
         email: formData.email,
         password: formData.password,
+        status: formData.status,
         recovery: formData.recovery,
-        tfa: formData.twofa,
-        status: formData.status
+        tfa: formData.twofa
       };
 
       const jsonString = JSON.stringify(payload);
