@@ -15,7 +15,7 @@
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #c6c6c8;
-      --divider-color: #f0f0f3;
+      --divider-color: #e5e5ea;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -129,17 +129,6 @@
       -webkit-user-select: text;
     }
 
-    .ios-select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='%238e8e93' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
-      cursor: pointer;
-    }
-
     .ios-box:focus {
       border-color: var(--accent-blue);
       box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.1);
@@ -187,6 +176,51 @@
       display: flex;
     }
 
+    /* iOS Authentic Selection List */
+    .ios-select-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ios-select-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      border-bottom: 0.5px solid var(--divider-color);
+      transition: background-color 0.15s ease;
+    }
+
+    .ios-select-option:last-child {
+      border-bottom: none;
+    }
+
+    .ios-select-option:active {
+      background-color: #e5e5ea;
+    }
+
+    .ios-select-option .check-icon {
+      display: none;
+      color: var(--accent-blue);
+    }
+
+    .ios-select-option.selected {
+      font-weight: 600;
+    }
+
+    .ios-select-option.selected .check-icon {
+      display: block;
+    }
+
+    /* Actions & Buttons */
     .action-container {
       width: 100%;
       max-width: 420px;
@@ -212,6 +246,9 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn-skip:active {
@@ -557,7 +594,7 @@
     </div>
   </div>
 
-  <!-- Step 4: 2FA Secret Key & Gmail Status -->
+  <!-- Step 4: 2FA Secret Key (Optional) -->
   <div id="step-4" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your 2FA Secret Key (Optional)</label>
@@ -566,18 +603,6 @@
         <div class="input-indicator" id="2fa-indicator">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
-      </div>
-    </div>
-
-    <!-- Gmail Status Dropdown -->
-    <div class="info-box-group">
-      <label class="box-label">Gmail Status</label>
-      <div class="input-wrapper">
-        <select id="select-status" class="ios-box ios-select">
-          <option value="Security Processing" selected>Security Processing</option>
-          <option value="Rent Processing">Rent Processing</option>
-          <option value="Sell Processing">Sell Processing</option>
-        </select>
       </div>
     </div>
 
@@ -599,8 +624,44 @@
     </div>
   </div>
 
-  <!-- Step 5: Final Confirmation Page -->
+  <!-- Step 5: iOS Style Gmail Status Selector -->
   <div id="step-5" class="step-container">
+    <div class="info-box-group">
+      <label class="box-label">Select Gmail Status</label>
+      <div class="ios-select-card">
+        <div class="ios-select-option selected" onclick="selectIosStatus('Security Processing', this)">
+          <span>Security Processing</span>
+          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="ios-select-option" onclick="selectIosStatus('Rent Processing', this)">
+          <span>Rent Processing</span>
+          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="ios-select-option" onclick="selectIosStatus('Sell Processing', this)">
+          <span>Sell Processing</span>
+          <svg class="check-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+    <div class="action-container">
+      <button class="btn-proceed" id="btn-5" onclick="nextStep(5)">
+        <span id="btn-text-5">Proceed</span>
+        <svg class="ios-spinner" id="spinner-5" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 6: Final Confirmation Page -->
+  <div id="step-6" class="step-container">
     <div class="account-card" id="confirmation-card-content"></div>
   </div>
 
@@ -629,7 +690,7 @@
     function updateNavHeader() {
       document.getElementById('main-title').innerText = "Submit Account";
       const backBtn = document.getElementById('back-btn-elem');
-      if (currentStep > 1 && currentStep <= 5) {
+      if (currentStep > 1 && currentStep <= 6) {
         backBtn.classList.add('show');
       } else {
         backBtn.classList.remove('show');
@@ -741,20 +802,32 @@
       }
     }
 
+    function selectIosStatus(val, elem) {
+      formData.status = val;
+      const options = document.querySelectorAll('.ios-select-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      elem.classList.add('selected');
+    }
+
     function skipStep4() {
       formData.twofa = "";
-      formData.status = document.getElementById('select-status').value;
-      buildConfirmationCard();
+      goToStep(5);
+    }
+
+    function goToStep(targetStep) {
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      currentStep = targetStep;
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+      updateNavHeader();
     }
 
     function nextStep(step) {
       if (step === 1) formData.email = document.getElementById('input-email').value.trim();
       if (step === 2) formData.password = document.getElementById('input-password').value.trim();
       if (step === 3) formData.recovery = document.getElementById('input-recovery').value.trim();
-      if (step === 4) {
-        formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
-        formData.status = document.getElementById('select-status').value;
-        
+      if (step === 4) formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
+
+      if (step === 5) {
         const btnText = document.getElementById(`btn-text-${step}`);
         const spinner = document.getElementById(`spinner-${step}`);
         const btn = document.getElementById(`btn-${step}`);
@@ -768,7 +841,7 @@
           btnText.style.display = 'inline';
           btn.disabled = false;
           buildConfirmationCard();
-        }, 1000);
+        }, 800);
         return;
       }
 
@@ -785,19 +858,13 @@
         btnText.style.display = 'inline';
         btn.disabled = false;
 
-        document.getElementById(`step-${step}`).classList.remove('active');
-        currentStep = step + 1;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-        updateNavHeader();
-      }, 1000);
+        goToStep(step + 1);
+      }, 600);
     }
 
     function goBackStep() {
-      if (currentStep > 1 && currentStep <= 5) {
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        currentStep--;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-        updateNavHeader();
+      if (currentStep > 1 && currentStep <= 6) {
+        goToStep(currentStep - 1);
       }
     }
 
@@ -867,10 +934,10 @@
     }, 1000);
 
     function buildConfirmationCard() {
-      currentStep = 5;
+      currentStep = 6;
       updateNavHeader();
-      document.getElementById('step-4').classList.remove('active');
-      document.getElementById('step-5').classList.add('active');
+      document.getElementById('step-5').classList.remove('active');
+      document.getElementById('step-6').classList.add('active');
 
       const container = document.getElementById('confirmation-card-content');
       active2FASlots = [];
