@@ -319,19 +319,19 @@
       color: #ffffff !important;
     }
 
-    /* Dynamic Status Badge Styles */
+    /* Text-Only Status Badge Styles (No Background) */
     .status-badge {
       display: inline-block;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: capitalize;
+      background: transparent !important;
+      padding: 0;
     }
-    .status-security { background: rgba(255, 59, 48, 0.12); color: var(--accent-red); }
-    .status-rent { background: rgba(0, 122, 255, 0.12); color: var(--accent-blue); }
-    .status-good { background: rgba(52, 199, 89, 0.12); color: var(--accent-green); }
-    .status-default { background: #e5e5ea; color: var(--text-muted); }
+    .status-security { color: var(--accent-red); }
+    .status-rent { color: var(--accent-blue); }
+    .status-self, .status-good { color: var(--accent-green); }
+    .status-default { color: var(--text-muted); }
 
     .card-actions {
       display: flex;
@@ -468,17 +468,20 @@
       -webkit-user-select: text;
     }
 
-    /* Custom Dropdown Styling */
+    /* iOS Styled Select Dropdown */
     .modal-select {
       appearance: none;
       -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #ffffff;
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
       background-repeat: no-repeat;
       background-position: right 12px top 50%;
-      background-size: 10px auto;
-      padding-right: 30px;
+      background-size: 11px auto;
+      padding-right: 32px;
       cursor: pointer;
       font-weight: 600;
+      color: var(--text-main);
     }
 
     .modal-input.blue-glow {
@@ -641,7 +644,19 @@
         <span>Edit Account</span>
       </div>
       
-      <!-- 1st Field: Password -->
+      <!-- 1st Field: Gmail Status Dropdown (Moved Above Password) -->
+      <div class="modal-input-group">
+        <label class="modal-label">Gmail Status</label>
+        <div class="input-wrapper">
+          <select id="edit-status-select" class="modal-input blue-glow modal-select">
+            <option value="Security Processing">Security Processing</option>
+            <option value="Rent Processing">Rent Processing</option>
+            <option value="Self Processing">Self Processing</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2nd Field: Password -->
       <div class="modal-input-group">
         <label class="modal-label">Your Password</label>
         <div class="input-wrapper">
@@ -652,7 +667,7 @@
         </div>
       </div>
 
-      <!-- 2nd Field: Recovery Email -->
+      <!-- 3rd Field: Recovery Email -->
       <div class="modal-input-group">
         <label class="modal-label">Your Recovery Email</label>
         <div class="input-wrapper">
@@ -663,7 +678,7 @@
         </div>
       </div>
 
-      <!-- 3rd Field: 2FA Secret Key -->
+      <!-- 4th Field: 2FA Secret Key -->
       <div class="modal-input-group">
         <label class="modal-label">2FA Secret Key</label>
         <div class="input-wrapper">
@@ -674,7 +689,7 @@
         </div>
       </div>
 
-      <!-- 4th Field: Confirm Password -->
+      <!-- 5th Field: Confirm Password -->
       <div class="modal-input-group">
         <label class="modal-label">Your Confirm Password</label>
         <div class="input-wrapper">
@@ -682,18 +697,6 @@
           <div class="valid-check-badge" id="edit-pass-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
-        </div>
-      </div>
-
-      <!-- 5th Field: Gmail Status Dropdown -->
-      <div class="modal-input-group">
-        <label class="modal-label">Gmail Status</label>
-        <div class="input-wrapper">
-          <select id="edit-status-select" class="modal-input blue-glow modal-select">
-            <option value="Security Processing">Security Processing</option>
-            <option value="Rent Processing">Rent Processing</option>
-            <option value="Good Account">Good Account</option>
-          </select>
         </div>
       </div>
 
@@ -814,7 +817,7 @@
       const s = status.toLowerCase();
       if (s.includes('security')) return 'status-security';
       if (s.includes('rent')) return 'status-rent';
-      if (s.includes('good') || s.includes('active')) return 'status-good';
+      if (s.includes('self') || s.includes('good')) return 'status-self';
       return 'status-default';
     }
 
@@ -1104,7 +1107,7 @@
         newPassCheck.classList.remove('show');
       }
 
-      // 2. Recovery Email Validation (Optional or Valid Email Format)
+      // 2. Recovery Email Validation
       let isRecoveryValid = false;
       const recoveryVal = recoveryInput.value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1122,7 +1125,7 @@
         isRecoveryValid = false;
       }
 
-      // 3. 2FA Base-32 Validation (Optional or Strict A-Z & 2-7, min 16 chars)
+      // 3. 2FA Base-32 Validation
       let isTfaValid = false;
       const clean2FA = tfaInput.value.replace(/\s+/g, '');
       const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
@@ -1141,7 +1144,7 @@
         isTfaValid = false;
       }
 
-      // 4. Confirm Password Check (Must match Srsohan99)
+      // 4. Confirm Password Check
       let isPassValid = false;
       const passVal = passInput.value;
       if (passVal.length === 0) {
